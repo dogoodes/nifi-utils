@@ -47,11 +47,7 @@ import org.json.JSONObject;
 @EventDriven
 @InputRequirement(Requirement.INPUT_REQUIRED)
 @Tags({ "sql", "select", "jdbc", "query", "database" })
-@CapabilityDescription("Execute provided SQL select query. Query result will be converted to Avro format."
-		+ " Streaming is used so arbitrarily large result sets are supported. This processor can be scheduled to run on "
-		+ "a timer, or cron expression, using the standard scheduling methods, or it can be triggered by an incoming FlowFile. "
-		+ "If it is triggered by an incoming FlowFile, then attributes of that FlowFile will be available when evaluating the "
-		+ "select query. FlowFile attribute 'executesql.row.count' indicates how many rows were selected.")
+@CapabilityDescription("")
 @SeeAlso({})
 @ReadsAttributes({ @ReadsAttribute(attribute = "", description = "") })
 @WritesAttributes({ @WritesAttribute(attribute = "", description = "") })
@@ -61,13 +57,13 @@ public class GetSqlReturnJson extends AbstractProcessor {
 	public static final String ERROR_CODE = "error.code";
 
 	public static final Relationship REL_SUCCESS = new Relationship.Builder()
-			.name("success")
-			.description("Successfully created FlowFile from SQL query result set.")
+			.name("successo")
+			.description("A query foi executada com sucessso.")
 			.build();
 
 	public static final Relationship REL_FAILURE = new Relationship.Builder()
 			.name("failure")
-			.description("SQL query execution failed. Incoming FlowFile will be penalized and routed to this relationship")
+			.description("Houve falha na execução da query.")
 			.build();
 
 	private Set<Relationship> relationships;
@@ -76,7 +72,7 @@ public class GetSqlReturnJson extends AbstractProcessor {
 
 	public static final PropertyDescriptor DBCP_SERVICE = new PropertyDescriptor.Builder()
 			.name("Database Connection Pooling Service")
-			.description("The Controller Service that is used to obtain connection to database")
+			.description("O Controller Service é usado para obter uma conexão com o banco de dados.")
 			.required(true)
 			.identifiesControllerService(DBCPService.class)
 			.build();
@@ -91,7 +87,7 @@ public class GetSqlReturnJson extends AbstractProcessor {
 
 	public static final PropertyDescriptor QUERY_TIMEOUT = new PropertyDescriptor.Builder()
 			.name("Max Wait Time")
-			.description("The maximum amount of time allowed for a running SQL select query, zero means there is no limit. Max time less than 1 second will be equal to zero.")
+			.description("A quantidade máxima de tempo permitido para a execução de uma consulta SQL SELECT. Zero significa que não há limite. Tempo máximo de menos de 1 segundo vai ser igual a zero.")
 			.defaultValue("0 seconds")
 			.required(true)
 			.addValidator(StandardValidators.TIME_PERIOD_VALIDATOR)
@@ -100,7 +96,7 @@ public class GetSqlReturnJson extends AbstractProcessor {
 
 	public static final PropertyDescriptor RETURN_WHEN_EMPTY = new PropertyDescriptor.Builder()
 			.name("Return when empty")
-			.description("Value to return when empty")
+			.description("Valor retornado quando não há resultado na query.")
 			.defaultValue("{}")
 			.required(true)
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
@@ -134,8 +130,7 @@ public class GetSqlReturnJson extends AbstractProcessor {
 	@OnScheduled
     public void setup(ProcessContext context) {
         if (!context.getProperty(SQL_SELECT_QUERY).isSet() && !context.hasIncomingConnection()) {
-            final String errorString = "Either the Select Query must be specified or there must be an incoming connection "
-                    + "providing flowfile(s) containing a SQL select query";
+            final String errorString = "Ou a consulta seleção deve ser especificada ou deve haver uma conexão de entrada.";
             getLogger().error(errorString);
             throw new ProcessException(errorString);
         }
