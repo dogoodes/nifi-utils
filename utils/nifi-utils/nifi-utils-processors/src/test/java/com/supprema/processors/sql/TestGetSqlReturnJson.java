@@ -23,17 +23,17 @@ import org.slf4j.LoggerFactory;
 
 public class TestGetSqlReturnJson {
 	
-	final static String DB_LOCATION = "target/db";
+//	final static String DB_LOCATION = "target/db";
 	
-	private static final Logger LOGGER;
-    static {
-        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "info");
-        System.setProperty("org.slf4j.simpleLogger.showDateTime", "true");
-        System.setProperty("org.slf4j.simpleLogger.log.nifi.io.nio", "debug");
-        System.setProperty("org.slf4j.simpleLogger.log.nifi.processors.standard.ExecuteSQL", "debug");
-        System.setProperty("org.slf4j.simpleLogger.log.nifi.processors.standard.TestExecuteSQL", "debug");
-        LOGGER = LoggerFactory.getLogger(TestGetSqlReturnJson.class);
-    }
+//	private static final Logger LOGGER;
+//    static {
+//        System.setProperty("org.slf4j.simpleLogger.defaultLogLevel", "info");
+//        System.setProperty("org.slf4j.simpleLogger.showDateTime", "true");
+//        System.setProperty("org.slf4j.simpleLogger.log.nifi.io.nio", "debug");
+//        System.setProperty("org.slf4j.simpleLogger.log.nifi.processors.standard.ExecuteSQL", "debug");
+//        System.setProperty("org.slf4j.simpleLogger.log.nifi.processors.standard.TestExecuteSQL", "debug");
+//        LOGGER = LoggerFactory.getLogger(TestGetSqlReturnJson.class);
+//    }
 	
 	private TestRunner runner;
 	

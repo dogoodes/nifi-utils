@@ -71,6 +71,7 @@ public class GetSqlReturnJson extends AbstractProcessor {
 			.build();
 
 	private Set<Relationship> relationships;
+	
 	private List<PropertyDescriptor> propDescriptors;
 
 	public static final PropertyDescriptor DBCP_SERVICE = new PropertyDescriptor.Builder()
