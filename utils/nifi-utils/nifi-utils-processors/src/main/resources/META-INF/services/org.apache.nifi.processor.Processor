@@ -13,3 +13,4 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 #${groupId}.processors.${artifactBaseName}.MyProcessor
+com.supprema.processors.sql.GetSqlReturnJson
