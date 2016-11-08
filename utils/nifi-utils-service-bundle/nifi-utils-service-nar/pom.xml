@@ -1,0 +1,31 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	
+	<parent>
+		<groupId>com.supprema</groupId>
+		<artifactId>nifi-utils-service-bundle</artifactId>
+		<version>1.0</version>
+	</parent>
+	
+	<artifactId>nifi-utils-service-nar</artifactId>
+	<packaging>nar</packaging>
+	<properties>
+		<maven.javadoc.skip>true</maven.javadoc.skip>
+		<source.skip>true</source.skip>
+	</properties>
+	
+	<dependencies>
+		<dependency>
+			<groupId>org.apache.nifi</groupId>
+			<artifactId>nifi-standard-services-api-nar</artifactId>
+			<type>nar</type>
+		</dependency>
+		<dependency>
+			<groupId>com.supprema</groupId>
+			<artifactId>nifi-utils-service</artifactId>
+			<version>1.0</version>
+		</dependency>
+	</dependencies>
+	
+</project>
