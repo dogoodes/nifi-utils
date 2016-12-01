@@ -116,14 +116,8 @@ public class JWTControllerService extends AbstractControllerService implements I
     @OnEnabled
     public void onConfigured(final ConfigurationContext context) throws InitializationException {
     	configContext = context;
-    	
-    	final Map<PropertyDescriptor, String> properties = context.getProperties();
-		
-        for (Map.Entry<PropertyDescriptor, String> property : properties.entrySet()) {
-        	if (!property.getKey().getDisplayName().equals(NAME_SIGNATURE_JWT) 
-        			&& !property.getKey().getDisplayName().equals(NAME_ALGORITHM_JWT)
-        			&& !property.getKey().getDisplayName().equals(NAME_EXPIRATION_TIME_JWT)
-        			&& !property.getKey().getDisplayName().equals(NAME_RETURN_VALUE)) {
+        for (Map.Entry<PropertyDescriptor, String> property : context.getProperties().entrySet()) {
+        	if (property.getKey().isDynamic()) {
         		final String prop = context.getProperty(property.getKey()).evaluateAttributeExpressions().getValue();
         		claims.put(property.getKey().getDisplayName(), prop);
         	}
