@@ -15,3 +15,4 @@
 com.nifi.processors.sql.GetSqlReturnJson
 com.nifi.processors.security.JWTGenerateToken
 com.nifi.processors.security.JWTValidateToken
+com.nifi.processors.server.StaticFileJetty

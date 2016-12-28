@@ -36,7 +36,7 @@ import com.nifi.components.nifi.service.IJWTControllerService;
 
 @EventDriven
 @InputRequirement(Requirement.INPUT_REQUIRED)
-@Tags({ "jwt", "security", "rest" })
+@Tags({ "jwt", "security", "rest", "dogood" })
 @CapabilityDescription("")
 @SeeAlso({})
 @ReadsAttributes({ @ReadsAttribute(attribute = "", description = "") })
