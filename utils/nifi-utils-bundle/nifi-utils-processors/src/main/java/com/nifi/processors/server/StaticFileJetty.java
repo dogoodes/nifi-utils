@@ -63,14 +63,9 @@ public class StaticFileJetty extends AbstractProcessor {
 
 	public static final Relationship REL_SUCCESS = new Relationship.Builder()
 			.name("success")
-			.description("")
+			.description("success")
 			.build();
 	
-	public static final Relationship REL_FAILURE = new Relationship.Builder()
-			.name("failure")
-			.description("")
-			.build();
-
 	private List<PropertyDescriptor> propDescriptors;
 
 	@Override
@@ -141,7 +136,6 @@ public class StaticFileJetty extends AbstractProcessor {
 	protected void init(final ProcessorInitializationContext context) {
 		final Set<Relationship> relationships = new HashSet<>();
 		relationships.add(REL_SUCCESS);
-		relationships.add(REL_FAILURE);
 		this.relationships = Collections.unmodifiableSet(relationships);
 
 		final List<PropertyDescriptor> pds = new ArrayList<>();
