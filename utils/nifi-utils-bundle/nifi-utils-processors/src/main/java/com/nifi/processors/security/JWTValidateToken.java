@@ -28,7 +28,7 @@ import org.apache.nifi.processor.exception.ProcessException;
 import org.apache.nifi.processor.util.StandardValidators;
 
 import com.auth0.jwt.JWTVerifier;
-import com.nifi.components.nifi.service.IJWTControllerService;
+import com.nifi.components.service.api.IJWTControllerService;
 
 @EventDriven
 @InputRequirement(Requirement.INPUT_REQUIRED)

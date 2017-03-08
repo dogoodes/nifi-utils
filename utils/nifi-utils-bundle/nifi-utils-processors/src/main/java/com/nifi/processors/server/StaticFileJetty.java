@@ -65,7 +65,7 @@ public class StaticFileJetty extends AbstractProcessor {
 			.name("success")
 			.description("success")
 			.build();
-	
+
 	private List<PropertyDescriptor> propDescriptors;
 
 	@Override
@@ -161,7 +161,7 @@ public class StaticFileJetty extends AbstractProcessor {
 			context.yield();
 			throw new ProcessException("Failed to initialize the server", e);
 		}
-		
+
 		flowFile = session.putAttribute(flowFile, PORT_OPEN, getPort() + "");
 		session.transfer(flowFile, REL_SUCCESS);
 

@@ -1,4 +1,4 @@
-package com.nifi.components.nifi.service;
+package com.nifi.components.service.api;
 
 import java.util.Map;
 

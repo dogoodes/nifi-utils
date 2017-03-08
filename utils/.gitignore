@@ -9,6 +9,9 @@
 .project
 .settings
 target
+.idea
+.iml
+*.iml
 
 # Packages #
 ############

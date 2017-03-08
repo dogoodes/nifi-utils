@@ -1,4 +1,4 @@
-package com.supprema.nifi.service;
+package com.nifi.components.service.api;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,8 +15,6 @@ import org.apache.nifi.controller.AbstractControllerService;
 import org.apache.nifi.controller.ConfigurationContext;
 import org.apache.nifi.processor.util.StandardValidators;
 import org.apache.nifi.reporting.InitializationException;
-
-import com.nifi.components.nifi.service.IJWTControllerService;
 
 @Tags({ "jwt", "security", "rest" })
 @CapabilityDescription("")

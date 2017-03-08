@@ -3,18 +3,18 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>com.supprema</groupId>
+		<groupId>br.com.dogood</groupId>
 		<artifactId>nifi-utils-service-bundle</artifactId>
-		<version>1.0</version>
+		<version>1.0.0</version>
 	</parent>
 	
 	<artifactId>nifi-utils-service</artifactId>
 	
 	<dependencies>
 		<dependency>
-			<groupId>com.supprema</groupId>
+			<groupId>br.com.dogood</groupId>
 			<artifactId>nifi-utils-service-api</artifactId>
-			<version>1.0</version>
+			<version>1.0.0</version>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.nifi</groupId>

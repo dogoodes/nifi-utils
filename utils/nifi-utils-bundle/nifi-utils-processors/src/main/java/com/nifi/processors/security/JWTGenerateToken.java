@@ -32,7 +32,7 @@ import org.apache.nifi.util.StopWatch;
 import com.auth0.jwt.Algorithm;
 import com.auth0.jwt.JWTAlgorithmException;
 import com.auth0.jwt.JWTSigner;
-import com.nifi.components.nifi.service.IJWTControllerService;
+import com.nifi.components.service.api.IJWTControllerService;
 
 @EventDriven
 @InputRequirement(Requirement.INPUT_REQUIRED)

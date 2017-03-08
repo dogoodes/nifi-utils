@@ -1,29 +1,7 @@
-package com.nifi.processors.sql;
+package com.nifi.processors.db;
 
-import java.io.IOException;
-import java.io.OutputStream;
-import java.nio.charset.StandardCharsets;
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
-import org.apache.nifi.annotation.behavior.EventDriven;
-import org.apache.nifi.annotation.behavior.InputRequirement;
+import org.apache.nifi.annotation.behavior.*;
 import org.apache.nifi.annotation.behavior.InputRequirement.Requirement;
-import org.apache.nifi.annotation.behavior.ReadsAttribute;
-import org.apache.nifi.annotation.behavior.ReadsAttributes;
-import org.apache.nifi.annotation.behavior.WritesAttribute;
-import org.apache.nifi.annotation.behavior.WritesAttributes;
 import org.apache.nifi.annotation.documentation.CapabilityDescription;
 import org.apache.nifi.annotation.documentation.SeeAlso;
 import org.apache.nifi.annotation.documentation.Tags;
@@ -32,17 +10,15 @@ import org.apache.nifi.components.PropertyDescriptor;
 import org.apache.nifi.dbcp.DBCPService;
 import org.apache.nifi.flowfile.FlowFile;
 import org.apache.nifi.logging.ComponentLog;
-import org.apache.nifi.processor.AbstractProcessor;
-import org.apache.nifi.processor.ProcessContext;
-import org.apache.nifi.processor.ProcessSession;
-import org.apache.nifi.processor.ProcessorInitializationContext;
-import org.apache.nifi.processor.Relationship;
+import org.apache.nifi.processor.*;
 import org.apache.nifi.processor.exception.ProcessException;
-import org.apache.nifi.processor.io.OutputStreamCallback;
 import org.apache.nifi.processor.util.StandardValidators;
 import org.apache.nifi.util.StopWatch;
 import org.json.JSONException;
-import org.json.JSONObject;
+
+import java.sql.*;
+import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 @EventDriven
 @InputRequirement(Requirement.INPUT_REQUIRED)
@@ -51,19 +27,22 @@ import org.json.JSONObject;
 @SeeAlso({})
 @ReadsAttributes({ @ReadsAttribute(attribute = "", description = "") })
 @WritesAttributes({ @WritesAttribute(attribute = "", description = "") })
-public class GetSqlReturnJson extends AbstractProcessor {
+public class GetSqlReturnAttribute extends AbstractProcessor {
 
 	public static final String ERROR_SQL = "error.message";
 	public static final String ERROR_CODE = "error.code";
+	public static final String UPPER = "upper";
+	public static final String LOWER = "lower";
+	public static final String TRUE = "true";
 
 	public static final Relationship REL_SUCCESS = new Relationship.Builder()
 			.name("successo")
-			.description("A query foi executada com sucessso.")
+			.description("Successfully created FlowFile from SQL query result set.")
 			.build();
 
 	public static final Relationship REL_FAILURE = new Relationship.Builder()
 			.name("failure")
-			.description("Houve falha na execução da query.")
+			.description("SQL query execution failed.")
 			.build();
 
 	private Set<Relationship> relationships;
@@ -72,7 +51,7 @@ public class GetSqlReturnJson extends AbstractProcessor {
 
 	public static final PropertyDescriptor DBCP_SERVICE = new PropertyDescriptor.Builder()
 			.name("Database Connection Pooling Service")
-			.description("O Controller Service é usado para obter uma conexão com o banco de dados.")
+			.description("The Controller Service that is used to obtain connection to database.")
 			.required(true)
 			.identifiesControllerService(DBCPService.class)
 			.build();
@@ -87,7 +66,7 @@ public class GetSqlReturnJson extends AbstractProcessor {
 
 	public static final PropertyDescriptor QUERY_TIMEOUT = new PropertyDescriptor.Builder()
 			.name("Max Wait Time")
-			.description("A quantidade máxima de tempo permitido para a execução de uma consulta SQL SELECT. Zero significa que não há limite. Tempo máximo de menos de 1 segundo vai ser igual a zero.")
+			.description("The maximum amount of time allowed for a running SQL select query, zero means there is no limit. Max time less than 1 second will be equal to zero.")
 			.defaultValue("0 seconds")
 			.required(true)
 			.addValidator(StandardValidators.TIME_PERIOD_VALIDATOR)
@@ -96,10 +75,18 @@ public class GetSqlReturnJson extends AbstractProcessor {
 
 	public static final PropertyDescriptor RETURN_WHEN_EMPTY = new PropertyDescriptor.Builder()
 			.name("Return when empty")
-			.description("Valor retornado quando não há resultado na query.")
-			.defaultValue("{}")
+			.description("This is the name of the attribute of the flowfile returned when the resultset is empty.")
+			.defaultValue("NORESULT")
 			.required(true)
 			.addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
+			.build();
+
+	public static final PropertyDescriptor CASE_ATTRIBUTE = new PropertyDescriptor.Builder()
+			.name("case attribute")
+			.description("In case of return attribute.")
+			.required(true)
+			.allowableValues(LOWER, UPPER)
+			.defaultValue(LOWER)
 			.build();
 
 	@Override
@@ -151,9 +138,11 @@ public class GetSqlReturnJson extends AbstractProcessor {
 		final String selectQuery = context.getProperty(SQL_SELECT_QUERY).evaluateAttributeExpressions(flowFile).getValue();
 		final Integer queryTimeout = context.getProperty(QUERY_TIMEOUT).asTimePeriod(TimeUnit.SECONDS).intValue();
 		final String returnWhenEmpty = context.getProperty(RETURN_WHEN_EMPTY).getValue();
+		final boolean lowerCase = context.getProperty(CASE_ATTRIBUTE).getValue().equals(UPPER);
 		
 		final StopWatch stopWatch = new StopWatch(true);
-		final Map<String, String> attribute = new HashMap<String, String>();
+		final Map<String, String> errorAttribute = new HashMap<>();
+		final List<FlowFile> attributes = new ArrayList<>();
 		
 		Connection connection = null;
 		Statement statement = null;
@@ -163,48 +152,42 @@ public class GetSqlReturnJson extends AbstractProcessor {
 			statement = connection.createStatement();
 			statement.setQueryTimeout(queryTimeout); // timeout in seconds
 
-			attribute.put(ERROR_SQL, selectQuery);
+			errorAttribute.put(ERROR_SQL, selectQuery);
 			final ResultSet resultSet = statement.executeQuery(selectQuery);
 			final ResultSetMetaData rsMeta = resultSet.getMetaData();
 			final int columnCnt = rsMeta.getColumnCount();
-			final List<String> columnNames = new ArrayList<String>();
+			final List<String> columnNames = new ArrayList<>();
 			for (int i = 1; i <= columnCnt; i++) {
 				columnNames.add(rsMeta.getColumnName(i));
 			}
 			final boolean resultSetEmpty = !resultSet.isBeforeFirst();
+
+			FlowFile split;
 			if (resultSetEmpty) {
-				FlowFile split = session.create(flowFile);
-				split = session.write(split, new OutputStreamCallback() {
-					@Override
-					public void process(OutputStream out) throws IOException {
-						out.write(returnWhenEmpty.getBytes(StandardCharsets.UTF_8));
-					}
-				});
+				split = session.create(flowFile);
+				split = session.putAttribute(split, returnWhenEmpty, TRUE);
+				attributes.add(split);
 			} else {
 				while (resultSet.next()) {
-					flowFile = session.write(flowFile, new OutputStreamCallback() {
-						@Override
-						public void process(OutputStream out) throws IOException {
-							final JSONObject obj = new JSONObject();
-							for (int i = 1; i <= columnCnt; i++) {
-								try {
-									obj.put(columnNames.get(i - 1), resultSet.getString(i));
-								} catch (JSONException | SQLException e) {
-									throw new ProcessException(e);
-								}
-							}
-							out.write(obj.toString().getBytes(StandardCharsets.UTF_8));
+					split = session.create(flowFile);
+					String column;
+					for (int i = 1; i <= columnCnt; i++) {
+						try {
+							column = columnNames.get(i - 1);
+							split = session.putAttribute(split, (lowerCase ? column.toLowerCase() : column.toUpperCase()), resultSet.getString(i));
+						} catch (JSONException | SQLException e) {
+							throw new ProcessException(e);
 						}
-					});
+					}
+					attributes.add(split);
 				}
 			}
-			session.getProvenanceReporter().modifyContent(flowFile, stopWatch.getElapsed(TimeUnit.MILLISECONDS));
 			session.transfer(flowFile, REL_SUCCESS);
 		} catch (Exception e) {
 			e.printStackTrace();
 			
 			//Add errorMessage
-			String errorMessage = attribute.get(ERROR_SQL);
+			String errorMessage = errorAttribute.get(ERROR_SQL);
 			if (errorMessage != null)
 				errorMessage = errorMessage.replaceAll("'", "\"");
 			flowFile = session.putAttribute(flowFile, ERROR_SQL, errorMessage);
