@@ -34,7 +34,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @SeeAlso({})
 @ReadsAttributes({ @ReadsAttribute(attribute = "", description = "") })
 @WritesAttributes({ @WritesAttribute(attribute = "", description = "") })
-public class SelectForUpdateProcessor extends AbstractProcessor {
+public class SelectForUpdate extends AbstractProcessor {
 
 	public static final String SQL_CODE = "sql.error.code";
 	public static final String ERROR_STMT = "error.message";

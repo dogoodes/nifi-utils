@@ -12,7 +12,11 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-com.nifi.processors.sql.GetSqlReturnJson
+com.nifi.processors.db.GetSqlReturnJson
+com.nifi.processors.db.GetSqlReturnAttribute
+com.nifi.processors.generate.GenerateExpectedFlowFile
+com.nifi.processors.parse.ConvertContentToAttribute
+com.nifi.processors.parse.ConvertJsonToAttribute
 com.nifi.processors.security.JWTGenerateToken
 com.nifi.processors.security.JWTValidateToken
 com.nifi.processors.server.StaticFileJetty

@@ -27,7 +27,7 @@ import java.util.concurrent.TimeUnit;
 public class SqlCrudApi extends AbstractProcessor {
 	
 	private static final String NAME_TOKEN_JWT = "Token";
-	private static final String NAME_SIGNATURE_JWT = "Nome do segredo para gerar o token";
+	private static final String NAME_SIGNATURE_JWT = "Nome do segredo para generate o token";
 //	private static final String NAME_ALGORITHM_JWT = "Algoritmo de encriptação";
 //	private static final String NAME_EXPIRATION_TIME_JWT = "Tempo de expiração do token";
 //	private static final String NAME_RETURN_VALUE = "Nome do token";

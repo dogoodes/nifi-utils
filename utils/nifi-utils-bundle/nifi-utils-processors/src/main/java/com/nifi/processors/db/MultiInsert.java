@@ -33,7 +33,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 @SeeAlso({})
 @ReadsAttributes({ @ReadsAttribute(attribute = "", description = "") })
 @WritesAttributes({ @WritesAttribute(attribute = "", description = "") })
-public class MultiInsertProcessor extends AbstractProcessor {
+public class MultiInsert extends AbstractProcessor {
 	public static final String RESULT = "insert.sucessfully.done";
 	public static final String SQL_CODE = "sql.error.code";
 	public static final String ERROR_STMT = "error.message";
@@ -234,7 +234,7 @@ public class MultiInsertProcessor extends AbstractProcessor {
 								
 								try {
 									result.put(ERROR_STMT, stm1);
-									logger.debug("MultiInsertProcessor performing " + stm1);
+									logger.debug("MultiInsert performing " + stm1);
 									preparedStatementInsert1 = con.prepareStatement(stm1);
 									preparedStatementInsert2 =prepareIfIsValid(stm2,result,con);
 									preparedStatementInsert3 =prepareIfIsValid(stm3,result,con);
@@ -308,7 +308,7 @@ public class MultiInsertProcessor extends AbstractProcessor {
 							if (isAValidSQL(stm)) {
 								result.put(ERROR_STMT, stm);
 								preparedStatementInsert = con.prepareStatement(stm);
-								logger.debug("MultiInsertProcessor preparing " + stm);
+								logger.debug("MultiInsert preparing " + stm);
 							}
 							return preparedStatementInsert;
 						}
