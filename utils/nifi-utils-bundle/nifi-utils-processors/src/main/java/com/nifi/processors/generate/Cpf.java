@@ -1,6 +1,6 @@
 package com.nifi.processors.generate;
 
-import com.auth0.jwt.internal.org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.Random;
 
@@ -9,44 +9,60 @@ import java.util.Random;
  */
 public class Cpf implements DocumentoReceita {
 
-    private static int LENGHT_CPF = 9;
-//    private static int LENGHT_DIGITO_VERIFICADO = 2;
-    private static int MASK_CPF_WITHOUT_ESTADO_ORIGEM = 999999999;
-    private static int MASK_CPF_WITH_ESTADO_ORIGEM = 99999999;
+    private static final int LENGHT_CPF = 9;
+    private static final int LENGHT_CPF_WITH_DF = 11;
+    private static final int MASK_CPF_WITHOUT_ESTADO_ORIGEM = 999999999;
+    private static final int MASK_CPF_WITH_ESTADO_ORIGEM = 99999999;
+    private static final int RULE_DF_MOD = 11;
+    private static final int RULE_DF_MOD_DIF = 2;
+    private static final int ZERO = 0;
 
     @Override
     public String generate(Integer estadoOrigem) {
-        String numeroAleatorio = "";
+        String generatedRandomNumber = "";
 
-        while (!validateGeneratedNumber(numeroAleatorio)) {
+        while (!validateGeneratedNumber(generatedRandomNumber)) {
             if (estadoOrigem != null && validateEstadoOrigem(estadoOrigem))
-                numeroAleatorio = generateRandomNumberWithEstadoOrigem(estadoOrigem);
+                generatedRandomNumber = generateRandomNumberWithEstadoOrigem(estadoOrigem);
             else
-                numeroAleatorio = generateRandomNumberWithoutEstadoOrigem();
+                generatedRandomNumber = generateRandomNumberWithoutEstadoOrigem();
         }
-        //TODO Fazer a lógica do DF
 
-        return numeroAleatorio;
+        String firstDF = generateFirstDF(generatedRandomNumber);
+        String secondDF = generateSecondDF(generatedRandomNumber.concat(firstDF));
+
+        return generatedRandomNumber + firstDF + secondDF;
     }
 
     @Override
     public Boolean validate(String documentoReceita) {
-        return null;
+        String documentoReceitaUnformated = format(documentoReceita, false);
+
+        if (documentoReceitaUnformated.length() != LENGHT_CPF_WITH_DF)
+            return false;
+
+        String numberCpf = documentoReceitaUnformated.substring(ZERO, LENGHT_CPF);
+        Integer firstDF = Integer.parseInt(documentoReceitaUnformated.substring(LENGHT_CPF, LENGHT_CPF_WITH_DF - 1));
+        Integer secondDF = Integer.parseInt(documentoReceitaUnformated.substring(LENGHT_CPF_WITH_DF - 1, LENGHT_CPF_WITH_DF));
+
+        if (firstDF != Integer.parseInt(generateFirstDF(numberCpf)) || secondDF != Integer.parseInt(generateSecondDF(numberCpf + firstDF)))
+            return false;
+
+        return true;
     }
 
     @Override
-    public String format(String documentoReceita) {
-        String newValue = null;
-        if (documentoReceita != null) {
-            String cpf_1 = documentoReceita.substring(0, 3);
-            String cpf_2 = documentoReceita.substring(3, 6);
-            String cpf_3 = documentoReceita.substring(6, 9);
-            String cpf_4 = documentoReceita.substring(9);
-            newValue = cpf_1 + "." + cpf_2 + "." + cpf_3 + "-" + cpf_4;
-        }
-        return newValue;
+    public String format(String documentoReceita, Boolean withMask) {
+        String newValue = "";
 
-        //TODO Talvez incluir o replace de qualquer caractere não numérico
+        if (documentoReceita != null) {
+            if (withMask)
+                newValue = formatWithMask(documentoReceita);
+            else
+                newValue = formatWithoutMask(documentoReceita);
+        }
+
+        return newValue;
     }
 
     private Boolean validateEstadoOrigem(Integer estadoOrigem) {
@@ -72,9 +88,37 @@ public class Cpf implements DocumentoReceita {
         }
     }
 
-    public static void main(String[] args) {
-        Cpf cpf = new Cpf();
-        System.out.println(cpf.generate(9));
+    private String generateFirstDF(String number) {
+        return ruleDF(number);
+    }
+
+    private String generateSecondDF(String number) {
+        return ruleDF(number);
+    }
+
+    private String ruleDF(String number) {
+        Integer sum = new Integer(ZERO);
+        Integer df = new Integer(ZERO);
+        char[] num = number.toCharArray();
+
+        for (int i = 0; i < number.length(); i++)
+            sum += Integer.parseInt(String.valueOf(num[i])) * (number.length() + 1 - i);
+
+        Integer mod = sum%RULE_DF_MOD;
+
+        if (mod > RULE_DF_MOD_DIF)
+            df = RULE_DF_MOD - mod;
+
+        return df.toString();
+    }
+
+    private String formatWithMask(String documentoReceita) {
+        String documentoReceitaUnformated = format(documentoReceita, false);
+        return documentoReceitaUnformated.replaceAll("(\\d{3})(\\d{3})(\\d{3})(\\d{2})", "$1.$2.$3-$4");
+    }
+
+    private String formatWithoutMask(String documentoReceita) {
+        return documentoReceita.replaceAll("[^0-9]", "");
     }
 
 }

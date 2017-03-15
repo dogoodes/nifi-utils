@@ -9,6 +9,6 @@ public interface DocumentoReceita {
 
     Boolean validate(String documentoReceita);
 
-    String format(String documentoReceita);
+    String format(String documentoReceita, Boolean withMask);
 
 }
