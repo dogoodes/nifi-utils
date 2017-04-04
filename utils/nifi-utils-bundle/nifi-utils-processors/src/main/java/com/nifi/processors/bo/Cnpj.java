@@ -1,4 +1,4 @@
-package com.nifi.processors.generate;
+package com.nifi.processors.bo;
 
 import org.apache.commons.lang3.StringUtils;
 

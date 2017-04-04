@@ -43,7 +43,4 @@ public class GenerateCpf extends AbstractProcessor {
     public void onTrigger(final ProcessContext context, final ProcessSession session) {
     }
 
-    public static void main(String[] args) {
-
-    }
 }

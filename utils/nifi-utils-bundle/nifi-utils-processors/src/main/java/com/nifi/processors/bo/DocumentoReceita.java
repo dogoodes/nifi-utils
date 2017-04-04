@@ -1,4 +1,4 @@
-package com.nifi.processors.generate;
+package com.nifi.processors.bo;
 
 /**
  * Created by fabiano on 09/03/17.

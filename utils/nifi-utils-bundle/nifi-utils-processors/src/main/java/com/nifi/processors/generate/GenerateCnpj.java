@@ -34,7 +34,4 @@ public class GenerateCnpj extends AbstractProcessor {
     public void onTrigger(final ProcessContext context, final ProcessSession session) {
     }
 
-    public static void main(String[] args) {
-
-    }
 }
