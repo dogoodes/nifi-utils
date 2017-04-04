@@ -17,6 +17,7 @@ com.nifi.processors.db.GetSqlReturnAttribute
 com.nifi.processors.generate.GenerateExpectedFlowFile
 com.nifi.processors.parse.ConvertContentToAttribute
 com.nifi.processors.parse.ConvertJsonToAttribute
+com.nifi.processors.parse.ConvertQueryStringToAttribute
 com.nifi.processors.security.JWTGenerateToken
 com.nifi.processors.security.JWTValidateToken
 com.nifi.processors.server.StaticFileJetty
