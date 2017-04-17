@@ -115,7 +115,7 @@ public class JWTGenerateToken extends AbstractProcessor {
         
 		flowFile = session.putAttribute(flowFile, returnValue, token);
 
-		session.getProvenanceReporter().modifyContent(flowFile, stopWatch.getElapsed(TimeUnit.MILLISECONDS));
+//		session.getProvenanceReporter().modifyContent(flowFile, stopWatch.getElapsed(TimeUnit.MILLISECONDS));
 		session.transfer(flowFile, REL_SUCCESS);
 	}
 	

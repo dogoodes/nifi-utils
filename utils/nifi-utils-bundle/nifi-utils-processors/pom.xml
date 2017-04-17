@@ -22,38 +22,54 @@
 	<artifactId>nifi-utils-processors</artifactId>
 	<packaging>jar</packaging>
 
+	<properties>
+		<amqp-client.version>3.6.0</amqp-client.version>
+	</properties>
+
 	<dependencies>
 		<dependency>
 			<groupId>org.apache.nifi</groupId>
 			<artifactId>nifi-api</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.nifi</groupId>
 			<artifactId>nifi-processor-utils</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.nifi</groupId>
 			<artifactId>nifi-utils</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.nifi</groupId>
 			<artifactId>nifi-dbcp-service-api</artifactId>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.nifi</groupId>
 			<artifactId>nifi-mock</artifactId>
 			<scope>test</scope>
 		</dependency>
+
+		<dependency>
+			<groupId>org.apache.nifi</groupId>
+			<artifactId>nifi-api</artifactId>
+		</dependency>
+
 		<dependency>
 			<groupId>org.slf4j</groupId>
 			<artifactId>slf4j-simple</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
 			<scope>test</scope>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.derby</groupId>
 			<artifactId>derby</artifactId>
@@ -65,21 +81,25 @@
 			<artifactId>json</artifactId>
 			<version>20140107</version>
 		</dependency>
+
 		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
 			<version>2.2.1</version>
 		</dependency>
+
 		<dependency>
 			<groupId>commons-codec</groupId>
 			<artifactId>commons-codec</artifactId>
 			<version>1.10</version>
 		</dependency>
+
 		<dependency>
 			<groupId>org.apache.commons</groupId>
 			<artifactId>commons-lang3</artifactId>
 			<version>3.4</version>
 		</dependency>
+
 		<dependency>
 			<groupId>commons-io</groupId>
 			<artifactId>commons-io</artifactId>
@@ -103,6 +123,28 @@
 			<version>4.5.3</version>
 		</dependency>
 
+		<dependency>
+			<groupId>com.rabbitmq</groupId>
+			<artifactId>amqp-client</artifactId>
+			<version>${amqp-client.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>org.apache.nifi</groupId>
+			<artifactId>nifi-ssl-context-service-api</artifactId>
+		</dependency>
+
+		<dependency>
+			<groupId>io.springfox</groupId>
+			<artifactId>springfox-swagger2</artifactId>
+			<version>2.6.1</version>
+		</dependency>
+
+		<!--<dependency>-->
+			<!--<groupId>io.swagger</groupId>-->
+			<!--<artifactId>swagger-jaxrs</artifactId>-->
+			<!--<version>1.5.13</version>-->
+		<!--</dependency>-->
 
 		<dependency>
 			<groupId>br.com.dogood</groupId>

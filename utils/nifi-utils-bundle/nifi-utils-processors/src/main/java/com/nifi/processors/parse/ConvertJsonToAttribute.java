@@ -19,6 +19,7 @@ import org.apache.nifi.stream.io.StreamUtils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
 
@@ -33,7 +34,6 @@ public class ConvertJsonToAttribute extends AbstractProcessor {
 	public static final String DEFAULT_CASE_SENSITIVE = "Default";
 
 	public static final String ERROR = "error.name.attribute";
-	public static final String UTF8 = "UTF-8";
 	
 	private Set<Relationship> relationships;
 	
@@ -117,17 +117,10 @@ public class ConvertJsonToAttribute extends AbstractProcessor {
                 }
             });
 
-            String contentString = null;
-			try {
-				contentString = new String(buffer, 0, bufferedByteCount.get(), UTF8);
-			} catch (UnsupportedEncodingException e) {
-				e.printStackTrace();
-				flowFile = session.putAttribute(flowFile, ERROR, e.getMessage());
-				session.transfer(flowFile, REL_FAILURE);
-			}
+			final String contentString = new String(buffer, 0, bufferedByteCount.get(), StandardCharsets.UTF_8);
             logger.debug("Getting the FlowFile content " + contentString);
             
-            Gson gson = new Gson();
+            final Gson gson = new Gson();
             attributes = gson.fromJson(contentString, new TypeToken<Map<String, String>>(){}.getType());
             
             if (attributes.size() > 0)

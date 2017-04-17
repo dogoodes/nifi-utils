@@ -15,6 +15,7 @@ import org.apache.nifi.processor.util.StandardValidators;
 
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 
@@ -28,7 +29,7 @@ public class ConvertQueryStringToAttribute extends AbstractProcessor {
     public static final PropertyDescriptor HTTP_REQUEST_URL = new PropertyDescriptor.Builder()
 		.name("Http request url")
 		.description("Http request url")
-        .required(false)
+        .required(true)
         .dynamic(false)
         .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
         .addValidator(StandardValidators.ATTRIBUTE_EXPRESSION_LANGUAGE_VALIDATOR)
@@ -100,16 +101,14 @@ public class ConvertQueryStringToAttribute extends AbstractProcessor {
     
     @Override
     public void onTrigger(final ProcessContext context, final ProcessSession session) {
-        final List<FlowFile> originalFlowFile = session.get(1);
-
-        FlowFile flowFile = null;
-        for (FlowFile ff : originalFlowFile) {
-            flowFile = ff;
+        FlowFile flowFile = session.get();
+        if (flowFile == null) {
+            flowFile = session.create();
         }
 
         final ComponentLog logger = getLogger();
 
-        Map<String, String> attributes = new HashMap<String, String>();
+        Map<String, String> attributes = new HashMap<>();
 
         final String httpRequestUrl = context.getProperty(HTTP_REQUEST_URL).evaluateAttributeExpressions(flowFile).getValue();
         final String prefix = context.getProperty(PREFIX).evaluateAttributeExpressions(flowFile).getValue();
@@ -119,7 +118,8 @@ public class ConvertQueryStringToAttribute extends AbstractProcessor {
         List<NameValuePair> params = null;
         try {
             logger.info("Fazendo o parse do url.");
-            params = URLEncodedUtils.parse(new URI(httpRequestUrl), StandardCharsets.UTF_8);
+//            params = URLEncodedUtils.parse(new URI(httpRequestUrl), StandardCharsets.UTF_8);
+            params = URLEncodedUtils.parse(new URI(httpRequestUrl), "UTF-8");
         } catch (URISyntaxException e) {
             e.printStackTrace();
             logger.error("Exception: " + e);
@@ -134,6 +134,14 @@ public class ConvertQueryStringToAttribute extends AbstractProcessor {
 
         flowFile = session.putAllAttributes(flowFile, attributes);
         session.transfer(flowFile, SUCCESS);
+    }
+
+    public static void main(String[] args) throws URISyntaxException {
+        String httpRequestUrl = "http://localhost:8888/something.html?one=1&two=2&three=3&three=3a";
+//        List<NameValuePair> params = URLEncodedUtils.parse(new URI(httpRequestUrl), StandardCharsets.UTF_8);
+        List<NameValuePair> params = URLEncodedUtils.parse(new URI(httpRequestUrl), "UTF-8");
+        for (NameValuePair param : params)
+            System.out.println(param.getName() + param.getValue());
     }
 
 }

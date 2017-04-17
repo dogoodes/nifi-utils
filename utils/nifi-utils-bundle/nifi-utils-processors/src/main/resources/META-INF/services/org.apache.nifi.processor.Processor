@@ -15,6 +15,8 @@
 com.nifi.processors.db.GetSqlReturnJson
 com.nifi.processors.db.GetSqlReturnAttribute
 com.nifi.processors.generate.GenerateExpectedFlowFile
+com.nifi.processors.generate.GenerateJsonFlowFileStructure
+com.nifi.processors.generate.RevertJsonFlowFileStructure
 com.nifi.processors.parse.ConvertContentToAttribute
 com.nifi.processors.parse.ConvertJsonToAttribute
 com.nifi.processors.parse.ConvertQueryStringToAttribute

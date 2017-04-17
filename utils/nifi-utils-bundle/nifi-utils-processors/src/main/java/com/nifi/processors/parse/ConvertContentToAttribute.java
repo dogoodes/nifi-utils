@@ -49,7 +49,7 @@ public class ConvertContentToAttribute extends AbstractProcessor {
 
     public static final PropertyDescriptor ATTRIBUTE_NAME = new PropertyDescriptor.Builder()
 		.name("Attribute Name")
-		.description("")
+		.description("Attribute Name.")
         .required(false)
         .dynamic(false)
         .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
@@ -58,7 +58,7 @@ public class ConvertContentToAttribute extends AbstractProcessor {
 
     public static final PropertyDescriptor ATTRIBUTE_VALUE_IF_EMPTY = new PropertyDescriptor.Builder()
             .name("Attribute Name If Empty Content")
-            .description("Attribute Value If Empty Content")
+            .description("Attribute Value If Empty Content.")
             .required(false)
             .dynamic(false)
             .addValidator(StandardValidators.NON_EMPTY_VALIDATOR)
