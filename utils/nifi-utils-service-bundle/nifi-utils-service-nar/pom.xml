@@ -3,7 +3,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	
 	<parent>
-		<groupId>br.com.dogood</groupId>
+		<groupId>es.dogood</groupId>
 		<artifactId>nifi-utils-service-bundle</artifactId>
 		<version>1.0.0</version>
 	</parent>
@@ -22,7 +22,7 @@
 			<type>nar</type>
 		</dependency>
 		<dependency>
-			<groupId>br.com.dogood</groupId>
+			<groupId>es.dogood</groupId>
 			<artifactId>nifi-utils-service</artifactId>
 			<version>1.0.0</version>
 		</dependency>

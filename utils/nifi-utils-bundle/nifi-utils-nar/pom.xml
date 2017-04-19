@@ -17,7 +17,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <parent>
-        <groupId>br.com.dogood</groupId>
+        <groupId>es.dogood</groupId>
         <artifactId>nifi-utils-bundle</artifactId>
         <version>1.0.0</version>
     </parent>
@@ -27,7 +27,7 @@
 
     <dependencies>
         <dependency>
-            <groupId>br.com.dogood</groupId>
+            <groupId>es.dogood</groupId>
             <artifactId>nifi-utils-processors</artifactId>
             <version>1.0.0</version>
         </dependency>

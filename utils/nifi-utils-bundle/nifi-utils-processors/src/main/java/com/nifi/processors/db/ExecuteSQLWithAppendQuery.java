@@ -358,7 +358,7 @@ public class ExecuteSQLWithAppendQuery extends AbstractProcessor {
         	}
         }
     }
-	
+
 	protected String evaluateSelectQuery(String selectQuery, String customEL, Integer numberOfTimesToIterate) {
 		StringBuffer sb = new StringBuffer();
 		for (int i = 1; i <= numberOfTimesToIterate; i++) {
