@@ -14,7 +14,6 @@
 # limitations under the License.
 com.nifi.processors.db.GetSqlReturnJson
 com.nifi.processors.db.GetSqlReturnAttribute
-com.nifi.processors.generate.GenerateExpectedFlowFile
 com.nifi.processors.generate.GenerateJsonFlowFileStructure
 com.nifi.processors.generate.RevertJsonFlowFileStructure
 com.nifi.processors.parse.ConvertContentToAttribute
